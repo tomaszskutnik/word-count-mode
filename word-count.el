@@ -57,19 +57,6 @@
 
 ;; ------------------------------------------------------------
 
-
-(or (fboundp 'add-local-hook)
-    (defun add-local-hook (hook function &optional append)
-      (make-local-hook hook)
-      (add-hook hook function append t))
-    )
-
-(or (fboundp 'remove-local-hook)
-    (defun remove-local-hook (hook function)
-      (if (local-variable-p hook (current-buffer))
-	  (remove-hook hook function t)))
-    )
-
 (defun mell-marker-set (marker &optional position buffer type)
   (or (markerp (eval marker))
       (set marker (make-marker)))
@@ -229,7 +216,7 @@
       )
     (overlay-put overlay 'face (or face 'highlight))
     (overlay-put overlay 'evaporate t)
-    (add-local-hook 'post-command-hook 'mell-sign-marker-redisplay)
+    (add-hook 'post-command-hook 'mell-sign-marker-redisplay t t)
     ))
 
 (defun mell-sign-marker-off (marker)
@@ -238,7 +225,7 @@
 	(delete-overlay overlay))
     (setq mell-sign-marker-overlay-alist
 	  (mell-alist-delete mell-sign-marker-overlay-alist marker))
-    (remove-local-hook 'post-command-hook 'mell-sign-marker-redisplay)
+    (remove-hook 'post-command-hook 'mell-sign-marker-redisplay t)
     ))
 
 (defun mell-sign-marker-redisplay ()
@@ -348,13 +335,13 @@ A pair with 't' is a default.")
   (if (mell-transient-region-active-p)
       (word-count-set-region)
     (word-count-set-marker))
-  (add-local-hook 'post-command-hook 'word-count-modeline-display)
+  (add-hook 'post-command-hook 'word-count-modeline-display t t)
   )
 
 (defun word-count-mode-off ()
   (interactive)
   (setq word-count-mode nil)
-  (remove-local-hook 'post-command-hook 'word-count-modeline-display)
+  (remove-hook 'post-command-hook 'word-count-modeline-display t)
   (word-count-set-marker-off)
   (word-count-set-region-off)
   )
