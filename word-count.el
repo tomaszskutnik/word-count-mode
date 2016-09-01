@@ -124,7 +124,7 @@
 (defun mell-alist-delete (alist key)
   (if key
       (let (return-alist)
-	(mapcar '(lambda (x)
+	(mapcar #'(lambda (x)
 		   (or (equal key (car x))
 		       (setq return-alist (cons x return-alist))))
 		alist)
@@ -166,7 +166,7 @@
   "Replace TARGET-STRING from FROM-REGEXP to TO-STRING."
   (if (string-match from-regexp target-string)
       (setq target-string
-	    (mapconcat '(lambda (x) x)
+	    (mapconcat #'(lambda (x) x)
 		       (mell-string-split target-string from-regexp)
 		       to-string))
     )
@@ -230,7 +230,7 @@
 
 (defun mell-sign-marker-redisplay ()
   (mapcar 
-   '(lambda (cons) (mell-sign-marker (car cons)))
+   #'(lambda (cons) (mell-sign-marker (car cons)))
    mell-sign-marker-overlay-alist))
 
 (defvar mell-sign-region-overlay-alist (list nil))
@@ -453,7 +453,7 @@ A pair with 't' is a default.")
 
 
 (defun word-count-preremove-string (string &optional patterns)
-  (mapcar '(lambda (pattern)
+  (mapcar #'(lambda (pattern)
 	     (setq string (mell-string-replace string pattern " ")))
 	  (or patterns
 	      (mell-alist-get-value major-mode
